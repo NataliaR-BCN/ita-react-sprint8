@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0 0.5rem;
+  font-family: 'Jura', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  color: #AAAAAA;
+}
+
+a {
+  text-decoration: none;
+  color: #AAAAAA;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.invisibleText {
+  color: #6d6d6d;
+}
