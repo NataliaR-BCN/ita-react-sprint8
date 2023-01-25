@@ -1,20 +1,38 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import CardMovie from './CardMovie';
+import { startServer } from '../../mocks/server';
 
 
+describe('CardMovie', () => {
+    startServer();
 
-test('render movie with api data', async () => {
+    
+    test('renders loading text while data is not delivered yet', () => {
+   
+        render(<CardMovie />);
 
-    render(<CardMovie id={1} />)
+        const loadingTxt = screen.getByText(/loading movie data/i);
 
-    //initial loading 
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+        expect(loadingTxt).toBeInTheDocument();
 
-    //data displayed 
-    expect(await screen.findByText(/a new hope/i, undefined, {timeout: 5000})).toBeInTheDocument();
+    })
 
-    //loading disappears
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+
+    test('renders Movie data)', async () => {
+
+       render(<CardMovie />);
+   
+       const movieTitle = await screen.findByText(/a new hope/i);
+       const movieEpidose = await screen.findByText(4);
+       const movieDirector = await screen.findByText(/george lucas/i);
+    
+
+       expect(movieTitle).toBeInTheDocument();
+       expect(movieEpidose).toBeInTheDocument();
+       expect(movieDirector).toBeInTheDocument();
+
+    })
 
 })
+

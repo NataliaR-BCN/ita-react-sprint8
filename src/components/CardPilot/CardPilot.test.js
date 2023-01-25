@@ -1,50 +1,40 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import CardPilot from './CardPilot';
-import useSearchApi from "../../hooks/useSearchApi";
+import { startServer } from '../../mocks/server';
 
 
-jest.mock('./../../hooks/useSearchApi');
+describe('CardPilot', () => {
+    startServer();
 
-beforeEach(() => {
-    useSearchApi.mockClear();
-});
-
-
-test('renders loading text while data is not delivered yet', () => {
-
-    useSearchApi.mockReturnValueOnce({loading: true});
+    
+    test('renders loading text while data is not delivered yet', () => {
    
-    render(<CardPilot />);
+        render(<CardPilot />);
 
-    const loadingTxt = screen.getByText(/loading pilot data/i);
+        const loadingTxt = screen.getByText(/loading pilot data/i);
 
-    expect(loadingTxt).toBeInTheDocument();
+        expect(loadingTxt).toBeInTheDocument();
 
-})
+    })
 
 
-test('renders error text when the api throws an error', () => {
+    test('renders Pilot data, including nested data (homeworld and species)', async () => {
 
-    useSearchApi.mockReturnValueOnce({error: true});
+       render(<CardPilot />);
    
-    render(<CardPilot />);
+       const pilotName = await screen.findByText(/luke skywalker/i);
+       const pilotHeight = await screen.findByText('172 cm');
+       const pilotMass = await screen.findByText('77 kg');
+       const pilotHomeworld = await screen.findByText(/tatooine/i);
+       const pilotSpecies = await screen.findByText(/-/i);
 
-    const errorTxt = screen.getByText(/information is not available/i);
+       expect(pilotName).toBeInTheDocument();
+       expect(pilotHeight).toBeInTheDocument();
+       expect(pilotMass).toBeInTheDocument();
+       expect(pilotHomeworld).toBeInTheDocument();
+       expect(pilotSpecies).toBeInTheDocument();
 
-    expect(errorTxt).toBeInTheDocument();
-
-})
-
-//NO FUNCIONA:
-test.skip('renders Pilot data', async () => {
-
-    useSearchApi.mockReturnValueOnce({name: 'Luke Skywalker'});
-
-    render(<CardPilot />);
-   
-    const pilotName = await screen.findByText(/luke skywalker/i);
-
-    expect(pilotName).toBeInTheDocument();
+    })
 
 })
